@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TETRIX Patch Notes</title>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #050411, #000000);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #6d4ec9;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px #6d4ec9;
+        }
+        .patch-list {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a182a;
+            border-radius: 12px;
+            padding: 20px 30px;
+            box-shadow: 0 8px 16px rgba(109, 78, 201, 0.5);
+        }
+        .patch-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #2d2b42;
+            padding-bottom: 15px;
+        }
+        .patch-item:last-child {
+            border-bottom: none;
+        }
+        .patch-date {
+            font-weight: 700;
+            color: #a3a3ff;
+            margin-bottom: 8px;
+        }
+        .patch-description {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #c0c0ff;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            font-weight: 600;
+            color: #6d4ec9;
+            text-decoration: none;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>TETRIX Patch Notes</h1>
+    <div class="patch-list">
+        <div class="patch-item">
+            <div class="patch-date">2024-06-XX</div>
+            <div class="patch-description">
+                - Added guest account numbering with random numbers appended (e.g., guest_98) for easier tracking.<br/>
+                - Implemented player count tracking using localStorage.<br/>
+                - Improved styling of Classic Mode page.<br/>
+                - Created patch notes page to display updates.
+            </div>
+        </div>
+    </div>
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+</body>
+</html>

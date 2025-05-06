@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETRIX CHANNEL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #00f0f0;
+            --secondary: #b400b4;
+            --dark: #0a0818;
+            --darker: #050411;
+            --light: #e0e0ff;
+            --accent: #ff3232;
+            --card-bg: rgba(10, 8, 24, 0.7);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, var(--darker), #000000);
+            color: var(--light);
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .glitch-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 240, 240, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 240, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 30px 60px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            padding: 12px 24px;
+            background: rgba(10, 8, 24, 0.8);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        .back-button:hover {
+            background: var(--primary);
+            color: var(--darker);
+            box-shadow: 0 0 15px var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 240, 240, 0.3);
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, 
+                transparent, 
+                var(--primary), 
+                var(--secondary), 
+                transparent);
+        }
+        
+        .channel-description {
+            max-width: 700px;
+            margin: 30px auto 0;
+            font-size: 1.2rem;
+            color: var(--light);
+            line-height: 1.7;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .channel-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 240, 240, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            transition: all 0.4s;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .channel-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent,
+                transparent,
+                transparent,
+                rgba(0, 240, 240, 0.1)
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 240, 240, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .channel-card:hover::before {
+            transform: rotate(30deg) translate(20%, 20%);
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+        }
+        
+        .card-description {
+            font-size: 1.1rem;
+            color: var(--light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .card-action {
+            display: inline-block;
+            padding: 8px 20px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .card-action:hover {
+            background: var(--primary);
+            color: var(--darker);
+            box-shadow: 0 0 15px rgba(0, 240, 240, 0.5);
+        }
+
+        /* Game section styles */
+        .game-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 240, 240, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .game-button {
+            padding: 15px 30px;
+            background: var(--primary);
+            color: var(--darker);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .game-button:hover {
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--primary);
+            transform: translateY(-5px);
+        }
+
+        /* Modal (popup) styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 101;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            color: var(--light);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .modal-content ul li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: var(--darker);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        .modal-button:hover {
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-effect"></div>
+    
+    <button class="back-button" onclick="window.location.href='login.html'">← BACK TO LOGIN</button>
+    
+    <div class="container">
+        <header>
+            <h1>TETRIX CHANNEL</h1>
+            <p class="channel-description">
+                Your central hub for all TETRIX updates, community highlights, and competitive news. 
+                Stay connected with the pulse of our block-stacking universe.
+            </p>
+        </header>
+        
+        <div class="content-grid">
+            <div class="channel-card pulse">
+                <h2 class="card-title">LATEST NEWS</h2>
+                <p class="card-description">
+                    Stay updated with the newest changes, events, and announcements happening across the TETRIX universe.
+                </p>
+                <div class="card-action" onclick="showComingSoon('News')">VIEW UPDATES</div>
+            </div>
+            
+            <!-- New game section added -->
+            <div class="channel-card game-section">
+                <h2 class="game-title">TETRIX GAME</h2>
+                <p class="card-description">Choose a game mode and start playing! Multiplayer mode is coming soon!</p>
+                <button class="game-button" onclick="showGameModes()">SELECT GAME MODE</button>
+            </div>
+            
+            <div class="channel-card">
+                <h2 class="card-title">LEADERBOARD</h2>
+                <p class="card-description">
+                    Check out the top players and their scores across all TETRIX game modes.
+                </p>
+                <div class="card-action" onclick="showComingSoon('Leaderboard')">SEE LEADERBOARD</div>
+            </div>
+
+            <div class="channel-card">
+                <h2 class="card-title">PATCH NOTES</h2>
+                <p class="card-description">
+                    Detailed breakdowns of game updates, including new features, balance changes, and bug fixes.
+                </p>
+                <div class="card-action" onclick="showComingSoon('Patch Notes')">READ NOTES</div>
+            </div>
+
+            <div class="channel-card">
+                <h2 class="card-title">DEVELOPER BLOG</h2>
+                <p class="card-description">
+                    Get insights from the development team, including behind-the-scenes looks at upcoming features and updates.
+                </p>
+                <div class="card-action" onclick="showComingSoon('Developer Blog')">READ BLOG</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Game Modes -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <h3>Select a Game Mode</h3>
+            <ul>
+                <li>Classic Mode</li>
+                <li>Timed Challenge</li>
+                <li>Endless Mode</li>
+                <li>Speedrun</li>
+                <li>Multiplayer (Coming Soon)</li>
+            </ul>
+            <button class="modal-button" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function showComingSoon(feature) {
+            alert(`${feature} content is coming soon! Stay tuned for updates.`);
+        }
+
+        function showGameModes() {
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+        
+        // Add animation to cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.channel-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `all 0.5s ease-out ${index * 0.1}s`;
+                observer.observe(card);
+            });
+            
+            // Back button click sound
+            document.querySelector('.back-button').addEventListener('click', function() {
+                const clickSound = new Audio('sounds/click.mp3');
+                clickSound.play();
+            });
+        });
+    </script>
+</body>
+</html>

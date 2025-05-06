@@ -1,0 +1,65 @@
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align to the left */
+    padding-left: 20px;
+}
+
+.menu-option {
+    width: 260px; /* Fixed smaller width */
+    padding: 18px 20px;
+    margin: 12px 0;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    color: #ffffff;
+    background: #1a182a;
+    border: 3px solid transparent;
+    border-radius: 12px;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Glowing effect on hover */
+.menu-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+    background: #24213b;
+}
+
+.menu-option:nth-child(1) {
+    border-color: #4ec9f1; /* Multiplayer = Blue */
+}
+.menu-option:nth-child(2) {
+    border-color: #88e56b; /* Solo = Green */
+}
+.menu-option:nth-child(3) {
+    border-color: #c27eff; /* Channel = Purple */
+}
+.menu-option:nth-child(4) {
+    border-color: #ffc75f; /* Config = Yellow */
+}
+.menu-option:nth-child(5) {
+    border-color: #ff6b6b; /* About = Red */
+}
+
+/* Glowing effect on hover */
+.menu-option:hover {
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 18px rgba(0, 255, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.menu-option-abbr {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffffbb;
+    background: rgba(255,255,255,0.1);
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-left: 10px;
+}

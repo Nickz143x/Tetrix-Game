@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETR.IX - Config</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0e15;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #1a1a2e;
+            padding: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            border-bottom: 1px solid #2d2b42;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 99;
+        }
+
+        .back-button:hover {
+            background: #ff4c5b;
+            transform: translateY(-2px);
+        }
+
+        .settings-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .settings-section {
+            background: #1e1b33;
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid #2d2b42;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .setting-label {
+            font-size: 1.1rem;
+            color: #d1d1e0;
+        }
+
+        .setting-control select,
+        .setting-control input[type="checkbox"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            background: #29263f;
+            color: #fff;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .setting-control input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .save-button {
+            padding: 15px 30px;
+            background: #079aad;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .save-button:hover {
+            background: #0ab7cf;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 2rem;
+            }
+            .settings-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-button" onclick="window.location.href='dashboard.html'">← Back</button>
+
+<header>
+    CONFIG
+</header>
+
+<div class="settings-container">
+    <!-- Controls Section -->
+    <div class="settings-section">
+        <div class="section-title">Controls</div>
+
+        <div class="setting-item">
+            <div class="setting-label">Move Left</div>
+            <div class="setting-control">
+                <select id="moveLeft">
+                    <option value="ArrowLeft">Left Arrow</option>
+                    <option value="A">A</option>
+                    <option value="Q">Q</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Move Right</div>
+            <div class="setting-control">
+                <select id="moveRight">
+                    <option value="ArrowRight">Right Arrow</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Soft Drop</div>
+            <div class="setting-control">
+                <select id="softDrop">
+                    <option value="ArrowDown">Down Arrow</option>
+                    <option value="S">S</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Hard Drop</div>
+            <div class="setting-control">
+                <select id="hardDrop">
+                    <option value="Space">Spacebar</option>
+                    <option value="W">W</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Hold</div>
+            <div class="setting-control">
+                <select id="holdPiece">
+                    <option value="C">C</option>
+                    <option value="ShiftLeft">Left Shift</option>
+                    <option value="ShiftRight">Right Shift</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphics Section -->
+    <div class="settings-section">
+        <div class="section-title">Graphics</div>
+
+        <div class="setting-item">
+            <div class="setting-label">Background Animation</div>
+            <div class="setting-control">
+                <input type="checkbox" id="backgroundAnimation">
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Block Glow</div>
+            <div class="setting-control">
+                <input type="checkbox" id="blockGlow">
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Dark Mode</div>
+            <div class="setting-control">
+                <input type="checkbox" id="darkMode">
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Section -->
+    <div class="settings-section">
+        <div class="section-title">Sound</div>
+
+        <div class="setting-item">
+            <div class="setting-label">Sound Effects</div>
+            <div class="setting-control">
+                <input type="checkbox" id="soundEffects">
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-label">Background Music</div>
+            <div class="setting-control">
+                <input type="checkbox" id="backgroundMusic">
+            </div>
+        </div>
+    </div>
+
+    <button class="save-button" onclick="saveSettings()">SAVE SETTINGS</button>
+</div>
+<script>
+    // Load saved settings on page load
+    window.onload = function() {
+        const settings = JSON.parse(localStorage.getItem('settings')) || {};
+
+        // Controls
+        if (settings.moveLeft) document.getElementById('moveLeft').value = settings.moveLeft;
+        if (settings.moveRight) document.getElementById('moveRight').value = settings.moveRight;
+        if (settings.softDrop) document.getElementById('softDrop').value = settings.softDrop;
+        if (settings.hardDrop) document.getElementById('hardDrop').value = settings.hardDrop;
+        if (settings.holdPiece) document.getElementById('holdPiece').value = settings.holdPiece;
+
+        // Graphics
+        if (settings.backgroundAnimation !== undefined) document.getElementById('backgroundAnimation').checked = settings.backgroundAnimation;
+        if (settings.blockGlow !== undefined) document.getElementById('blockGlow').checked = settings.blockGlow;
+        if (settings.darkMode !== undefined) document.getElementById('darkMode').checked = settings.darkMode;
+
+        // Sound
+        if (settings.soundEffects !== undefined) document.getElementById('soundEffects').checked = settings.soundEffects;
+        if (settings.backgroundMusic !== undefined) document.getElementById('backgroundMusic').checked = settings.backgroundMusic;
+    }
+
+    function saveSettings() {
+        const settings = {
+            // Controls
+            moveLeft: document.getElementById('moveLeft').value,
+            moveRight: document.getElementById('moveRight').value,
+            softDrop: document.getElementById('softDrop').value,
+            hardDrop: document.getElementById('hardDrop').value,
+            holdPiece: document.getElementById('holdPiece').value,
+
+            // Graphics
+            backgroundAnimation: document.getElementById('backgroundAnimation').checked,
+            blockGlow: document.getElementById('blockGlow').checked,
+            darkMode: document.getElementById('darkMode').checked,
+
+            // Sound
+            soundEffects: document.getElementById('soundEffects').checked,
+            backgroundMusic: document.getElementById('backgroundMusic').checked
+        };
+
+        localStorage.setItem('settings', JSON.stringify(settings));
+        alert("Settings saved!");
+    }
+</script>
+
+<script src="sologame.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

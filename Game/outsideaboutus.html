@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETRIX - About Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #00f0f0;
+            --secondary: #b400b4;
+            --dark: #0a0818;
+            --darker: #050411;
+            --light: #e0e0ff;
+            --accent: #ff3232;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--darker);
+            color: var(--light);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 30px;
+            position: relative;
+        }
+        
+        .neon-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--primary), 
+                var(--secondary), 
+                var(--primary), 
+                transparent);
+            box-shadow: 0 0 10px var(--primary), 
+                        0 0 20px var(--secondary);
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            padding: 12px 24px;
+            background: rgba(10, 8, 24, 0.8);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        .back-button:hover {
+            background: var(--primary);
+            color: var(--darker);
+            box-shadow: 0 0 15px var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin: 0 0 40px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(180, 0, 180, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 50px 0 25px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), transparent);
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: var(--light);
+        }
+        
+        strong {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: rgba(10, 8, 24, 0.6);
+            border: 1px solid rgba(0, 240, 240, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 240, 240, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, 
+                transparent, 
+                var(--primary), 
+                var(--secondary), 
+                transparent);
+            margin: 60px 0;
+            opacity: 0.3;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .team-member {
+            text-align: center;
+        }
+        
+        .member-photo {
+            width: 300px;
+            height: 300px;
+            border-radius: 20%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: 0 auto 15px;
+            box-shadow: 0 0 20px rgba(55, 174, 253, 0.3);
+        }
+        
+        .member-name {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+            .member-role {
+                color: #ADD8E6;
+                font-size: 0.9rem;
+            }
+        
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 30px 0;
+            border-top: 1px solid rgba(0, 240, 240, 0.1);
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: var(--light);
+            margin: 0 15px;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(224, 224, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .container {
+                padding: 80px 20px 40px;
+            }
+            
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neon-border"></div>
+    
+    <button class="back-button" onclick="window.location.href='login.html'">← BACK TO LOGIN</button>
+    
+    <div class="container">
+        <h1>ABOUT TETRIX</h1>
+        
+        <p>TETRIX is a futuristic reimagining of the classic block-stacking puzzle game. We've combined timeless gameplay with modern aesthetics to create an experience that feels both nostalgic and fresh.</p>
+        
+        <h2>OUR MISSION</h2>
+        
+        <p>At TETRIX, we're passionate about creating a stress-free gaming environment where players of all skill levels can enjoy the pure puzzle experience. Our zen approach removes the pressure while maintaining the satisfying challenge that makes the game so compelling.</p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">∞</div>
+                <h3 class="feature-title">ENDLESS PLAY</h3>
+                <p>No game over screens - when you can't place a piece, the board clears and you continue playing with your score intact.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">MODERN CONTROLS</h3>
+                <p>Precise movement with responsive controls, including hard drop, hold piece, and rotation in both directions.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">VISUAL STYLE</h3>
+                <p>Clean, futuristic design with customizable color schemes to suit your preferences.</p>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <h2>THE TETRIX DIFFERENCE</h2>
+        
+        <p><strong>What makes our version special:</strong></p>
+        
+        <p>• <strong>No pressure gameplay:</strong> Enjoy at your own pace without the stress of increasing speeds</p>
+        <p>• <strong>Clean interface:</strong> Minimal distractions so you can focus on the puzzle</p>
+        <p>• <strong>Customizable:</strong> Adjust settings to create your perfect playing experience</p>
+        <p>• <strong>Accessible:</strong> Designed to be enjoyable for both casual players and puzzle enthusiasts</p>
+        
+        <div class="divider"></div>
+        
+        <h2>DEVELOPMENT TEAM</h2>
+        
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="developer1.jpg" alt="Lead Developer" class="member-photo">
+                <h3 class="member-name">Nick Andrew D. Basillote</h3>
+                <p class="member-role">Game Developer/Creator</p>
+            </div>
+        
+        <footer>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="copyright">© 2025 TETRIX | Not affiliated with Tetris Holding LLC</p>
+        </footer>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Add subtle animation to feature cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            featureCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease-out';
+                observer.observe(card);
+            });
+            
+            // Back button click sound
+            document.querySelector('.back-button').addEventListener('click', function() {
+                const clickSound = new Audio('sounds/click.mp3');
+                clickSound.play();
+            });
+        });
+    </script>
+</body>
+</html>

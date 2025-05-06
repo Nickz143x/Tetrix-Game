@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETR.IX - About</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0e15;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        
+        .back-button:hover {
+            background: #ff4c5b;
+            transform: translateY(-2px);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6d4ec9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #d1d1ff;
+        }
+        
+        strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        
+        .game-mode-desc {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #2a2842;
+            margin: 40px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #2a2842;
+        }
+        
+        th {
+            background-color: #1a1829;
+            color: #6d4ec9;
+            font-weight: 700;
+        }
+        
+        td {
+            background-color: #1a1829;
+            color: #d1d1ff;
+        }
+        
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #a5a3c0;
+            margin-top: 50px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Team section */
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .team-member {
+            background-color: #1a1829;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 200px;
+        }
+        
+        .member-photo {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        
+        .member-role {
+            font-size: 1rem;
+            color: #a5a3c0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 60px 20px 40px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .team-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="back-button" onclick="navigateTo('dashboard.html')">← Back</button>
+    
+    <div class="container">
+        <h1>ABOUT THE GAME</h1>
+        
+        <p>TETR.IX is a modern take on the classic block-stacking puzzle game. Our goal is to create an engaging online community where players can enjoy competitive or casual gameplay.</p>
+        
+        <h2>Our Vision</h2>
+        
+        <p>At TETR.IX, we believe in bringing players together through simple yet challenging gameplay. We've crafted a familiar experience with modern features that encourage friendly competition and skill development.</p>
+        
+        <h2>Game Modes</h2>
+        
+        <p><strong>CLASSIC MODE:</strong><br>
+        <span class="game-mode-desc">Play until the stack reaches the top. Speed increases with each level.</span></p>
+        
+        <p><strong>BLITZ MODE:</strong><br>
+        <span class="game-mode-desc">Score as high as possible in 2 minutes!</span></p>
+        
+        <p><strong>SPRINT MODE:</strong><br>
+        <span class="game-mode-desc">Clear 40 lines as fast as possible!</span></p>
+        
+        <p><strong>ZEN MODE:</strong><br>
+        <span class="game-mode-desc">Relaxing gameplay with no game over - perfect for practice.</span></p>
+        
+        <hr>
+        
+        <h2>Upcoming Features</h2>
+        
+        <table>
+            <tr>
+                <th>Multiplayer Battles</th>
+                <th>Custom Themes</th>
+                <th>Tournaments</th>
+            </tr>
+            <tr>
+                <td>Challenge friends or random opponents</td>
+                <td>Personalize blocks, backgrounds, and effects</td>
+                <td>Compete for glory in organized events</td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <h2>DEVELOPMENT TEAM</h2>
+
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="developer1.jpg" alt="Lead Developer" class="member-photo">
+                <h3 class="member-name">Nick Andrew D. Basillote</h3>
+                <p class="member-role">Game Developer/Creator</p>
+            </div>
+        </div>
+
+        <p class="disclaimer">TETR.IX is not affiliated with or endorsed by the owners of Tetris®. This is a fan-made tribute to the classic puzzle game concept.</p>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            const paths = [
+                page,
+                `../${page}`,
+                `/${page}`,
+                `/Game/${page}`
+            ];
+            
+            let attempts = 0;
+            function tryRedirect() {
+                if (attempts >= paths.length) {
+                    alert(`Page ${page} not found`);
+                    return;
+                }
+                
+                fetch(paths[attempts])
+                    .then(() => window.location.href = paths[attempts])
+                    .catch(() => {
+                        attempts++;
+                        tryRedirect();
+                    });
+            }
+            tryRedirect();
+        }
+
+        function playClickSound() {
+            const clickSound = document.getElementById('click-sound');
+            if (clickSound) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
+        }
+
+        document.querySelector('.back-button').addEventListener('click', playClickSound);
+    </script>
+
+    <!-- Audio elements -->
+    <audio id="click-sound" src="sounds/click.mp3" preload="auto"></audio>
+    <script src="sologame.js"></script>
+    <script src="loginanimation.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

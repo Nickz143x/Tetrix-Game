@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETR.IX - Tetra Channel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #0f0e15, #181528);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #1a1a2e;
+            padding: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #ffffff;
+            border-bottom: 1px solid #2d2b42;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: #1e1b33;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid #2d2b42;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(124, 99, 148, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: #a5a3c0;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .read-more {
+            color: #00c9ff;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 99;
+        }
+
+        .back-button:hover {
+            background: #ff4c5b;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 2rem;
+            }
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-button" onclick="window.location.href='dashboard.html'">← Back</button>
+
+<header>
+    TETRIX CHANNEL
+</header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-title">Latest News</div>
+            <div class="card-description">
+                Stay updated with the newest changes and events happening across TETR.IX!
+            </div>
+            <div class="read-more" onclick="alert('News Coming Soon!')">Read More</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Patch Notes</div>
+            <div class="card-description">
+                Find out about the latest patches, balance changes, bug fixes, and updates!
+            </div>
+            <div class="read-more" onclick="window.location.href='patch_notes.html'">Read More</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Leaderboard Highlights</div>
+            <div class="card-description">
+                See who's topping the charts in Classic, Blitz, and 40 Lines modes this season!
+            </div>
+            <!-- Link to leaderboard page -->
+            <div class="read-more" onclick="window.location.href='leaderboards.html'">View Highlights</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Community Spotlight</div>
+            <div class="card-description">
+                Featuring some of the best community content, tournaments, and player creations.
+            </div>
+            <div class="read-more" onclick="alert('Community Spotlight Coming Soon!')">View Spotlights</div>
+        </div>
+
+        <div class="card" id="player-count-card">
+            <div class="card-title">Player Count</div>
+            <div class="card-description" id="player-count-description">
+                Loading player count...
+            </div>
+        </div>
+    </div>
+
+<script src="sologame.js"></script> <!-- You can reuse sologame.js if it has bg animation -->
+
+<script>
+    // Display total accounts logged in count from localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+        const playerCount = localStorage.getItem('tetrixPlayerCount') || '0';
+        const desc = document.getElementById('player-count-description');
+        desc.textContent = `Total accounts logged in: ${playerCount}`;
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

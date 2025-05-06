@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to TETR.IX</title>
+  <style>
+    /* General Body Style */
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #100727, #1a093d);
+      background-size: 400% 400%;
+      animation: backgroundShift 20s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', cursive;
+      color: white;
+      flex-direction: column;
+    }
+
+    /* Keyframe for the background animation */
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Falling Block Animation */
+    .falling-block {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: rgba(7, 154, 173, 0.7);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+      opacity: 0.7;
+      animation: fallDown 10s linear infinite, spin 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes fallDown {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Welcome Container Animation */
+    .welcome-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      animation: popIn 1.5s ease forwards;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    /* Welcome Message Styling */
+    .welcome-message {
+      font-size: 3rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Changing Block Animation */
+    .changing-block {
+      width: 50px;
+      height: 50px;
+      background-color: #48cae4;
+      animation: blockChange 3s infinite alternate, blockSpin 5s linear infinite;
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+
+    @keyframes blockChange {
+      0% { background-color: #48cae4; transform: scale(1) rotate(0deg); }
+      25% { background-color: #90e0ef; transform: scale(1.2) rotate(15deg); }
+      50% { background-color: #00b4d8; transform: scale(0.8) rotate(-15deg); }
+      75% { background-color: #0077b6; transform: scale(1.1) rotate(10deg); }
+      100% { background-color: #03045e; transform: scale(1) rotate(0deg); }
+    }
+
+    @keyframes blockSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Pop-In Animation for the Welcome Container */
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+    <div class="welcome-container">
+      <div class="changing-block"></div>
+      <div class="welcome-message" id="welcome-message">Welcome to<br>TETR.IX!</div>
+    </div>
+
+  <script>
+    // Function to create falling blocks with random behavior
+    function createFallingBlock() {
+      const block = document.createElement('div');
+      block.classList.add('falling-block');
+      block.style.left = Math.random() * window.innerWidth + 'px';
+      block.style.animationDuration = (Math.random() * 5 + 8) + 's'; // Random time for falling
+      block.style.opacity = Math.random() * 0.5 + 0.3;
+      block.style.width = block.style.height = (Math.random() * 20 + 20) + 'px';
+      document.body.appendChild(block);
+
+      setTimeout(() => {
+        block.remove();
+      }, 15000); // Remove the block after animation is finished
+    }
+
+    // Keep creating falling blocks continuously
+    setInterval(createFallingBlock, 300);
+
+    // Redirect to the dashboard after 5 seconds with fade-out effect
+    setTimeout(() => {
+      const container = document.querySelector('.welcome-container');
+      container.style.transition = "opacity 1s ease";
+      container.style.opacity = 0; // Fade-out
+
+      setTimeout(() => {
+        window.location.href = "dashboard.html"; // Redirect after fade-out
+      }, 1000); // Wait 1 second for fade-out animation
+    }, 5000); // Start after 5 seconds
+  </script>
+<script src="sologame.js"></script> 
+<script src="loginanimation.js"></script> 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

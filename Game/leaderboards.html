@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TETRIX LEADERBOARD</title>
+    <link rel="stylesheet" href="dashboard.css" />
+    <style>
+        /* Additional styles to override or complement dashboard.css */
+        body {
+            background: radial-gradient(circle at center, #050411, #000000);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            padding: 12px 24px;
+            background: rgba(10, 8, 24, 0.8);
+            color: #00f0f0;
+            border: 2px solid #00f0f0;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .back-button:hover {
+            background: #00f0f0;
+            color: #050411;
+            box-shadow: 0 0 15px #00f0f0;
+        }
+        .game-selection {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .game-selection button {
+            background: #6d4ec9;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        .game-selection button:hover {
+            background: #7d5ed9;
+        }
+        .game-section {
+            background: #1a182a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2d2b42;
+        }
+        .game-title {
+            font-size: 1.5rem;
+            color: #6d4ec9;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #2d2b42;
+        }
+        .leaderboard-table th {
+            background: #6d4ec9;
+            color: white;
+        }
+        .leaderboard-table td {
+            background: #1a182a;
+        }
+        .leaderboard-table tr:nth-child(even) td {
+            background: #24213b;
+        }
+        .current-user {
+            background: rgba(109, 78, 201, 0.2);
+            border-left: 3px solid #6d4ec9;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="navigateTo('Tetrix_Channel.html')">← BACK TO TETRIX</button>
+
+    <div class="container">
+        <header>
+            <h1>TETRIX LEADERBOARD</h1>
+        </header>
+
+        <div class="game-selection">
+            <button onclick="showLeaderboard('classic')">Classic Mode</button>
+            <button onclick="showLeaderboard('blitz')">Blitz Mode</button>
+            <button onclick="showLeaderboard('lines')">40 Lines</button>
+        </div>
+
+        <div id="classic" class="game-section" style="display:none;">
+            <h2 class="game-title">Classic</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="classic-leaderboard-body">
+                    <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="blitz" class="game-section" style="display:none;">
+            <h2 class="game-title">Blitz</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="blitz-leaderboard-body">
+                    <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="lines" class="game-section" style="display:none;">
+            <h2 class="game-title">40 Lines</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="lines-leaderboard-body">
+                    <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script src="common.js"></script>
+<script src="user.js"></script>
+<script>
+    function showLeaderboard(mode) {
+        // Hide all sections
+        document.querySelectorAll('.game-section').forEach(function(section) {
+            section.style.display = 'none';
+        });
+
+        // Show selected mode
+        document.getElementById(mode).style.display = 'block';
+    }
+
+    function loadLeaderboards() {
+        const currentUser = window.tetrixCurrentUser || JSON.parse(localStorage.getItem('tetrixCurrentUser')) || {};
+        const currentUsername = currentUser.username || (currentUser.guest ? 'Guest' : 'Player');
+
+        // Deduplicate and get best Classic scores (high scores)
+        const classicScoresRaw = JSON.parse(localStorage.getItem('tetrixClassicScores') || '[]');
+        const classicScoresMap = new Map();
+        classicScoresRaw.forEach(player => {
+            if (!classicScoresMap.has(player.name) || classicScoresMap.get(player.name).score < player.score) {
+                classicScoresMap.set(player.name, player);
+            }
+        });
+        const classicScores = Array.from(classicScoresMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10);
+
+        const classicBody = document.getElementById('classic-leaderboard-body');
+        classicBody.innerHTML = '';
+
+        if (classicScores.length === 0) {
+            classicBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            classicScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.score.toLocaleString()}</td>
+                `;
+                classicBody.appendChild(row);
+            });
+        }
+
+        // Deduplicate and get best Blitz scores (high scores)
+        const blitzScoresRaw = JSON.parse(localStorage.getItem('tetrixBlitzScores') || '[]');
+        const blitzScoresMap = new Map();
+        blitzScoresRaw.forEach(player => {
+            if (!blitzScoresMap.has(player.name) || blitzScoresMap.get(player.name).score < player.score) {
+                blitzScoresMap.set(player.name, player);
+            }
+        });
+        const blitzScores = Array.from(blitzScoresMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10);
+
+        const blitzBody = document.getElementById('blitz-leaderboard-body');
+        blitzBody.innerHTML = '';
+
+        if (blitzScores.length === 0) {
+            blitzBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            blitzScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.score.toLocaleString()}</td>
+                `;
+                blitzBody.appendChild(row);
+            });
+        }
+
+        // Deduplicate and get best 40 Lines scores (low times)
+        const linesScoresRaw = JSON.parse(localStorage.getItem('tetrix40LinesScores') || '[]');
+        const linesScoresMap = new Map();
+        linesScoresRaw.forEach(player => {
+            if (!linesScoresMap.has(player.name) || linesScoresMap.get(player.name).time > player.time) {
+                linesScoresMap.set(player.name, player);
+            }
+        });
+        const linesScores = Array.from(linesScoresMap.values())
+            .sort((a, b) => a.time - b.time)
+            .slice(0, 10);
+
+        const linesBody = document.getElementById('lines-leaderboard-body');
+        linesBody.innerHTML = '';
+
+        if (linesScores.length === 0) {
+            linesBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            linesScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                // Format time as MM:SS.ms
+                const minutes = Math.floor(player.time / 60000);
+                const seconds = Math.floor((player.time % 60000) / 1000);
+                const milliseconds = Math.floor(player.time % 1000);
+                const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0').slice(0, 2)}`;
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${formattedTime}</td>
+                `;
+                linesBody.appendChild(row);
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadLeaderboards();
+        showLeaderboard('classic');
+    });
+</script>
+
+<audio id="click-sound" src="sounds/click.mp3.mp3" preload="auto"></audio>
+<audio id="hover-sound" src="sounds/hover.mp3.mp3" preload="auto"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

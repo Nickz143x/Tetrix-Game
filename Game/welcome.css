@@ -1,0 +1,14 @@
+.falling-block {
+    position: absolute;
+    top: -50px;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(7, 154, 173, 0.6);
+    border-radius: 5px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { top: -50px; }
+    100% { top: 100vh; }
+}

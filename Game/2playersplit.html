@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETR.IX - Ranked 1v1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #6d4ec9;
+            --primary-light: #9a6efc;
+            --primary-lighter: #d1b3ff;
+            --background-dark: #0f0e15;
+            --background-darker: #0a0910;
+            --panel-bg: #1a1829;
+            --panel-border: #2a2842;
+            --text-main: #e0e0ff;
+            --text-dim: #a0a0c0;
+            --danger: #ff5555;
+            --player-1: #ff5555;
+            --player-2: #5555ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--background-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            background: var(--background-darker);
+            border-bottom: 1px solid var(--panel-border);
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-button:hover {
+            background: var(--primary-light);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .game-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding: 20px;
+            background: var(--background-darker);
+        }
+
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            width: 340px;
+            background: var(--panel-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .player-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .player-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .game-area {
+            display: flex;
+            padding: 15px;
+            gap: 10px;
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80px;
+        }
+
+        .hold-container {
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 6px;
+            padding: 8px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--panel-border);
+        }
+
+        .hold-title {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .next-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .next-title {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        .next-piece {
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 6px;
+            padding: 8px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--panel-border);
+        }
+
+        .game-board-container {
+            position: relative;
+            width: 200px;
+            height: 400px;
+            background: rgba(20, 20, 40, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid var(--panel-border);
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            color: var(--danger);
+            font-weight: 900;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .game-over-overlay button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .game-over-overlay button:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .player-1 .player-name {
+            color: var(--player-1);
+        }
+
+        .player-2 .player-name {
+            color: var(--player-2);
+        }
+
+        .garbage-meter {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .garbage-progress {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--danger);
+            transition: width 0.3s ease;
+        }
+
+        .player-1 .garbage-progress {
+            background: var(--player-1);
+        }
+
+        .player-2 .garbage-progress {
+            background: var(--player-2);
+        }
+
+        .attack-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 85, 85, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .player-1 .attack-effect {
+            background: rgba(255, 85, 85, 0.3);
+        }
+
+        .player-2 .attack-effect {
+            background: rgba(85, 85, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" id="back-button">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back
+        </button>
+        <h1>Ranked 1v1</h1>
+    </div>
+
+    <div class="game-container">
+        <div class="player-container player-1" id="player1-container">
+            <div class="player-info">
+                <div class="player-name">PLAYER 1</div>
+                <div class="player-stats">
+                    <div class="stat">
+                        <div class="stat-label">Lines</div>
+                        <div class="stat-value" id="lines-display-1">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Wins</div>
+                        <div class="stat-value" id="wins-display-1">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Level</div>
+                        <div class="stat-value" id="level-display-1">1</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Match</div>
+                        <div class="stat-value" id="match-display-1">0/3</div>
+                    </div>
+                </div>
+            </div>
+            <div class="garbage-meter">
+                <div class="garbage-progress" id="garbage-meter-1" style="width: 0%"></div>
+            </div>
+            <div class="game-area">
+                <div class="side-panel">
+                    <div class="hold-container" id="hold-container-1"></div>
+                    <div class="hold-title">HOLD</div>
+                    <div class="next-title">NEXT</div>
+                    <div class="next-piece" id="next-piece-1-1"></div>
+                    <div class="next-piece" id="next-piece-1-2"></div>
+                    <div class="next-piece" id="next-piece-1-3"></div>
+                </div>
+                <div class="game-board-container">
+                    <canvas id="grid-canvas-1" width="200" height="400"></canvas>
+                    <canvas id="block-canvas-1" width="200" height="400"></canvas>
+                    <canvas id="ui-canvas-1" width="200" height="400"></canvas>
+                    <div class="attack-effect" id="attack-effect-1"></div>
+                    <div class="game-over-overlay" id="game-over-1">
+                        <div>GAME OVER</div>
+                        <button id="restart-button-1">Restart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-container player-2" id="player2-container">
+            <div class="player-info">
+                <div class="player-name">PLAYER 2</div>
+                <div class="player-stats">
+                    <div class="stat">
+                        <div class="stat-label">Lines</div>
+                        <div class="stat-value" id="lines-display-2">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Wins</div>
+                        <div class="stat-value" id="wins-display-2">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Level</div>
+                        <div class="stat-value" id="level-display-2">1</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Match</div>
+                        <div class="stat-value" id="match-display-2">0/3</div>
+                    </div>
+                </div>
+            </div>
+            <div class="garbage-meter">
+                <div class="garbage-progress" id="garbage-meter-2" style="width: 0%"></div>
+            </div>
+            <div class="game-area">
+                <div class="side-panel">
+                    <div class="hold-container" id="hold-container-2"></div>
+                    <div class="hold-title">HOLD</div>
+                    <div class="next-title">NEXT</div>
+                    <div class="next-piece" id="next-piece-2-1"></div>
+                    <div class="next-piece" id="next-piece-2-2"></div>
+                    <div class="next-piece" id="next-piece-2-3"></div>
+                </div>
+                <div class="game-board-container">
+                    <canvas id="grid-canvas-2" width="200" height="400"></canvas>
+                    <canvas id="block-canvas-2" width="200" height="400"></canvas>
+                    <canvas id="ui-canvas-2" width="200" height="400"></canvas>
+                    <div class="attack-effect" id="attack-effect-2"></div>
+                    <div class="game-over-overlay" id="game-over-2">
+                        <div>GAME OVER</div>
+                        <button id="restart-button-2">Restart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game constants
+        const COLS = 10;
+        const ROWS = 20;
+        const BLOCK_SIZE = 20;
+        const NEXT_PIECE_SIZE = 16;
+
+        // Tetromino shapes
+        const SHAPES = [
+            [], // 0 - no block
+            [[1, 1, 1, 1]], // I
+            [[1, 1], [1, 1]], // O
+            [[0, 1, 0], [1, 1, 1]], // T
+            [[1, 1, 0], [0, 1, 1]], // Z
+            [[0, 1, 1], [1, 1, 0]], // S
+            [[1, 0, 0], [1, 1, 1]], // L
+            [[0, 0, 1], [1, 1, 1]]  // J
+        ];
+
+        // Colors for tetrominos
+        const COLORS = [
+            '',
+            '#00f0f0', // I - cyan
+            '#f0f000', // O - yellow
+            '#a000f0', // T - purple
+            '#f00000', // Z - red
+            '#00f000', // S - green
+            '#f0a000', // L - orange
+            '#0000f0'  // J - blue
+        ];
+
+        // Player class
+        class Player {
+            constructor(id, opponentId) {
+                this.id = id;
+                this.opponentId = opponentId;
+                this.grid = this.createGrid();
+                this.currentPiece = null;
+                this.nextPieces = [];
+                this.holdPiece = null;
+                this.canHold = true;
+                this.score = 0;
+                this.lines = 0;
+                this.level = 1;
+                this.wins = 0;
+                this.gameOver = false;
+                this.garbageQueue = 0;
+                this.dropCounter = 0;
+                this.dropInterval = 1000;
+                this.lastTime = 0;
+                
+                // Initialize canvases
+                this.gridCanvas = document.getElementById(`grid-canvas-${id}`);
+                this.blockCanvas = document.getElementById(`block-canvas-${id}`);
+                this.uiCanvas = document.getElementById(`ui-canvas-${id}`);
+                
+                // Set canvas sizes
+                this.gridCanvas.width = COLS * BLOCK_SIZE;
+                this.gridCanvas.height = ROWS * BLOCK_SIZE;
+                this.blockCanvas.width = COLS * BLOCK_SIZE;
+                this.blockCanvas.height = ROWS * BLOCK_SIZE;
+                this.uiCanvas.width = COLS * BLOCK_SIZE;
+                this.uiCanvas.height = ROWS * BLOCK_SIZE;
+                
+                // Get contexts
+                this.gridCtx = this.gridCanvas.getContext('2d');
+                this.blockCtx = this.blockCanvas.getContext('2d');
+                this.uiCtx = this.uiCanvas.getContext('2d');
+                
+                // Scale for crisp rendering
+                this.gridCtx.scale(BLOCK_SIZE, BLOCK_SIZE);
+                this.blockCtx.scale(BLOCK_SIZE, BLOCK_SIZE);
+                this.uiCtx.scale(BLOCK_SIZE, BLOCK_SIZE);
+                
+                // Initialize game
+                this.reset();
+                this.drawGrid();
+                this.updateDisplay();
+            }
+            
+            createGrid() {
+                return Array.from(Array(ROWS), () => Array(COLS).fill(0));
+            }
+            
+            reset() {
+                this.grid = this.createGrid();
+                this.nextPieces = [];
+                for (let i = 0; i < 3; i++) {
+                    this.nextPieces.push(this.randomPiece());
+                }
+                this.spawnPiece();
+                this.score = 0;
+                this.lines = 0;
+                this.level = 1;
+                this.dropInterval = 1000;
+                this.gameOver = false;
+                this.garbageQueue = 0;
+                this.canHold = true;
+                document.getElementById(`game-over-${this.id}`).style.display = 'none';
+            }
+            
+            randomPiece() {
+                return Math.floor(Math.random() * 7) + 1;
+            }
+            
+            spawnPiece() {
+                if (this.nextPieces.length === 0) {
+                    for (let i = 0; i < 3; i++) {
+                        this.nextPieces.push(this.randomPiece());
+                    }
+                }
+                
+                const pieceId = this.nextPieces.shift();
+                this.nextPieces.push(this.randomPiece());
+                this.updateNextDisplay();
+                
+                this.currentPiece = {
+                    id: pieceId,
+                    shape: SHAPES[pieceId],
+                    x: Math.floor(COLS / 2) - Math.floor(SHAPES[pieceId][0].length / 2),
+                    y: 0
+                };
+                
+                // Check if game over
+                if (this.collision()) {
+                    this.gameOver = true;
+                    document.getElementById(`game-over-${this.id}`).style.display = 'flex';
+                }
+            }
+            
+            hold() {
+                if (!this.canHold) return;
+                
+                if (this.holdPiece === null) {
+                    this.holdPiece = this.currentPiece.id;
+                    this.spawnPiece();
+                } else {
+                    const temp = this.currentPiece.id;
+                    this.currentPiece.id = this.holdPiece;
+                    this.currentPiece.shape = SHAPES[this.holdPiece];
+                    this.currentPiece.x = Math.floor(COLS / 2) - Math.floor(SHAPES[this.holdPiece][0].length / 2);
+                    this.currentPiece.y = 0;
+                    this.holdPiece = temp;
+                }
+                
+                this.updateHoldDisplay();
+                this.canHold = false;
+            }
+            
+            movePiece(direction) {
+                if (this.gameOver) return;
+                
+                switch (direction) {
+                    case 'left':
+                        this.currentPiece.x--;
+                        if (this.collision()) this.currentPiece.x++;
+                        break;
+                    case 'right':
+                        this.currentPiece.x++;
+                        if (this.collision()) this.currentPiece.x--;
+                        break;
+                    case 'down':
+                        this.currentPiece.y++;
+                        if (this.collision()) {
+                            this.currentPiece.y--;
+                            this.lockPiece();
+                        }
+                        break;
+                    case 'rotate':
+                        this.rotatePiece();
+                        break;
+                }
+                
+                this.draw();
+            }
+            
+            rotatePiece() {
+                const originalShape = this.currentPiece.shape;
+                const rows = originalShape.length;
+                const cols = originalShape[0].length;
+                
+                // Create new rotated shape
+                const newShape = Array.from(Array(cols), () => Array(rows).fill(0));
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < cols; x++) {
+                        newShape[x][rows - 1 - y] = originalShape[y][x];
+                    }
+                }
+                
+                this.currentPiece.shape = newShape;
+                
+                // Wall kick if needed
+                if (this.collision()) {
+                    if (this.currentPiece.x > COLS / 2) {
+                        // Kick left
+                        this.currentPiece.x--;
+                        if (this.collision()) {
+                            this.currentPiece.x += 2; // Try right
+                            if (this.collision()) {
+                                this.currentPiece.x--;
+                                this.currentPiece.shape = originalShape; // Revert
+                            }
+                        }
+                    } else {
+                        // Kick right
+                        this.currentPiece.x++;
+                        if (this.collision()) {
+                            this.currentPiece.x -= 2; // Try left
+                            if (this.collision()) {
+                                this.currentPiece.x++;
+                                this.currentPiece.shape = originalShape; // Revert
+                            }
+                        }
+                    }
+                }
+            }
+            
+            collision() {
+                const { shape, x, y } = this.currentPiece;
+                
+                for (let row = 0; row < shape.length; row++) {
+                    for (let col = 0; col < shape[row].length; col++) {
+                        if (shape[row][col] !== 0) {
+                            const newX = x + col;
+                            const newY = y + row;
+                            
+                            if (
+                                newX < 0 || 
+                                newX >= COLS || 
+                                newY >= ROWS ||
+                                (newY >= 0 && this.grid[newY][newX] !== 0)
+                            ) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                
+                return false;
+            }
+            
+            lockPiece() {
+                const { id, shape, x, y } = this.currentPiece;
+                
+                for (let row = 0; row < shape.length; row++) {
+                    for (let col = 0; col < shape[row].length; col++) {
+                        if (shape[row][col] !== 0) {
+                            const gridY = y + row;
+                            if (gridY >= 0) {
+                                this.grid[gridY][x + col] = id;
+                            }
+                        }
+                    }
+                }
+                
+                // Check for completed lines
+                this.clearLines();
+                
+                // Spawn new piece
+                this.spawnPiece();
+                this.canHold = true;
+            }
+            
+            clearLines() {
+                let linesCleared = 0;
+                
+                outer: for (let y = ROWS - 1; y >= 0; y--) {
+                    for (let x = 0; x < COLS; x++) {
+                        if (this.grid[y][x] === 0) {
+                            continue outer;
+                        }
+                    }
+                    
+                    // Remove the line
+                    this.grid.splice(y, 1);
+                    // Add new empty line at top
+                    this.grid.unshift(Array(COLS).fill(0));
+                    linesCleared++;
+                    y++; // Check the same row again
+                }
+                
+                if (linesCleared > 0) {
+                    // Add to score
+                    this.lines += linesCleared;
+                    this.score += this.calculateScore(linesCleared);
+                    
+                    // Check for level up
+                    const newLevel = Math.floor(this.lines / 10) + 1;
+                    if (newLevel > this.level) {
+                        this.level = newLevel;
+                        this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
+                    }
+                    
+                    // Send garbage to opponent
+                    if (this.opponentId) {
+                        const garbageLines = this.calculateGarbage(linesCleared);
+                        players[this.opponentId].receiveGarbage(garbageLines);
+                    }
+                    
+                    this.updateDisplay();
+                }
+            }
+            
+            calculateScore(linesCleared) {
+                const points = [0, 100, 300, 500, 800];
+                return points[linesCleared] * this.level;
+            }
+            
+            calculateGarbage(linesCleared) {
+                // Simple garbage calculation
+                return linesCleared - 1;
+            }
+            
+            receiveGarbage(lines) {
+                if (lines <= 0) return;
+                
+                this.garbageQueue += lines;
+                this.updateGarbageDisplay();
+                
+                // Show attack effect
+                const effect = document.getElementById(`attack-effect-${this.id}`);
+                effect.style.opacity = '0.5';
+                setTimeout(() => {
+                    effect.style.opacity = '0';
+                }, 300);
+            }
+            
+            processGarbage() {
+                if (this.garbageQueue <= 0) return;
+                
+                const linesToAdd = Math.min(this.garbageQueue, 5);
+                this.garbageQueue -= linesToAdd;
+                
+                // Shift grid up
+                for (let i = 0; i < linesToAdd; i++) {
+                    this.grid.shift();
+                    this.grid.push(Array(COLS).fill(8)); // 8 for garbage
+                }
+                
+                this.updateGarbageDisplay();
+            }
+            
+            update(time = 0) {
+                if (this.gameOver) return;
+                
+                const deltaTime = time - this.lastTime;
+                this.lastTime = time;
+                
+                this.dropCounter += deltaTime;
+                if (this.dropCounter > this.dropInterval) {
+                    this.movePiece('down');
+                    this.dropCounter = 0;
+                }
+                
+                this.processGarbage();
+                this.draw();
+                requestAnimationFrame(this.update.bind(this));
+            }
+            
+            draw() {
+                // Clear block canvas
+                this.blockCtx.clearRect(0, 0, COLS, ROWS);
+                
+                // Draw current piece
+                this.drawPiece(this.currentPiece);
+                
+                // Draw grid
+                for (let y = 0; y < ROWS; y++) {
+                    for (let x = 0; x < COLS; x++) {
+                        if (this.grid[y][x] !== 0) {
+                            this.blockCtx.fillStyle = COLORS[this.grid[y][x]];
+                            this.blockCtx.fillRect(x, y, 1, 1);
+                            
+                            // Draw border
+                            this.blockCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                            this.blockCtx.lineWidth = 0.05;
+                            this.blockCtx.strokeRect(x, y, 1, 1);
+                        }
+                    }
+                }
+            }
+            
+            drawGrid() {
+                this.gridCtx.clearRect(0, 0, COLS, ROWS);
+                
+                // Draw grid lines
+                this.gridCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                this.gridCtx.lineWidth = 0.05;
+                
+                for (let x = 0; x <= COLS; x++) {
+                    this.gridCtx.beginPath();
+                    this.gridCtx.moveTo(x, 0);
+                    this.gridCtx.lineTo(x, ROWS);
+                    this.gridCtx.stroke();
+                }
+                
+                for (let y = 0; y <= ROWS; y++) {
+                    this.gridCtx.beginPath();
+                    this.gridCtx.moveTo(0, y);
+                    this.gridCtx.lineTo(COLS, y);
+                    this.gridCtx.stroke();
+                }
+            }
+            
+            drawPiece(piece) {
+                if (!piece) return;
+                
+                this.blockCtx.fillStyle = COLORS[piece.id];
+                
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (piece.shape[y][x] !== 0) {
+                            const drawX = piece.x + x;
+                            const drawY = piece.y + y;
+                            
+                            if (drawY >= 0) {
+                                this.blockCtx.fillRect(drawX, drawY, 1, 1);
+                                
+                                // Draw border
+                                this.blockCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                                this.blockCtx.lineWidth = 0.05;
+                                this.blockCtx.strokeRect(drawX, drawY, 1, 1);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            updateDisplay() {
+                document.getElementById(`lines-display-${this.id}`).textContent = this.lines;
+                document.getElementById(`wins-display-${this.id}`).textContent = this.wins;
+            }
+            
+            updateNextDisplay() {
+                for (let i = 0; i < 3; i++) {
+                    const container = document.getElementById(`next-piece-${this.id}-${i+1}`);
+                    container.innerHTML = '';
+                    
+                    if (i < this.nextPieces.length) {
+                        const pieceId = this.nextPieces[i];
+                        const shape = SHAPES[pieceId];
+                        const canvas = document.createElement('canvas');
+                        canvas.width = shape[0].length * NEXT_PIECE_SIZE;
+                        canvas.height = shape.length * NEXT_PIECE_SIZE;
+                        const ctx = canvas.getContext('2d');
+                        
+                        ctx.fillStyle = COLORS[pieceId];
+                        
+                        for (let y = 0; y < shape.length; y++) {
+                            for (let x = 0; x < shape[y].length; x++) {
+                                if (shape[y][x] !== 0) {
+                                    ctx.fillRect(
+                                        x * NEXT_PIECE_SIZE, 
+                                        y * NEXT_PIECE_SIZE, 
+                                        NEXT_PIECE_SIZE, 
+                                        NEXT_PIECE_SIZE
+                                    );
+                                }
+                            }
+                        }
+                        
+                        container.appendChild(canvas);
+                    }
+                }
+            }
+            
+            updateHoldDisplay() {
+                const container = document.getElementById(`hold-container-${this.id}`);
+                container.innerHTML = '';
+                
+                if (this.holdPiece) {
+                    const pieceId = this.holdPiece;
+                    const shape = SHAPES[pieceId];
+                    const canvas = document.createElement('canvas');
+                    canvas.width = shape[0].length * NEXT_PIECE_SIZE;
+                    canvas.height = shape.length * NEXT_PIECE_SIZE;
+                    const ctx = canvas.getContext('2d');
+                    
+                    ctx.fillStyle = COLORS[pieceId];
+                    
+                    for (let y = 0; y < shape.length; y++) {
+                        for (let x = 0; x < shape[y].length; x++) {
+                            if (shape[y][x] !== 0) {
+                                ctx.fillRect(
+                                    x * NEXT_PIECE_SIZE, 
+                                    y * NEXT_PIECE_SIZE, 
+                                    NEXT_PIECE_SIZE, 
+                                    NEXT_PIECE_SIZE
+                                );
+                            }
+                        }
+                    }
+                    
+                    container.appendChild(canvas);
+                }
+            }
+            
+            updateGarbageDisplay() {
+                const percentage = Math.min(100, this.garbageQueue * 10);
+                document.getElementById(`garbage-meter-${this.id}`).style.width = `${percentage}%`;
+            }
+        }
+
+        // Game initialization
+        const players = {
+            1: new Player(1, 2),
+            2: new Player(2, 1)
+        };
+
+        // Start game loop
+        function startGame() {
+            players[1].update();
+            players[2].update();
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', event => {
+            switch (event.key) {
+                // Player 1 controls (WASD + Space)
+                case 'a':
+                    players[1].movePiece('left');
+                    break;
+                case 'd':
+                    players[1].movePiece('right');
+                    break;
+                case 's':
+                    players[1].movePiece('down');
+                    break;
+                case 'w':
+                    players[1].movePiece('rotate');
+                    break;
+                case ' ':
+                    players[1].hold();
+                    break;
+                
+                // Player 2 controls (Arrow keys + Up)
+                case 'ArrowLeft':
+                    players[2].movePiece('left');
+                    break;
+                case 'ArrowRight':
+                    players[2].movePiece('right');
+                    break;
+                case 'ArrowDown':
+                    players[2].movePiece('down');
+                    break;
+                case 'ArrowUp':
+                    players[2].movePiece('rotate');
+                    break;
+                case 'Shift':
+                    players[2].hold();
+                    break;
+            }
+        });
+
+        // Restart buttons
+        document.getElementById('restart-button-1').addEventListener('click', () => {
+            players[1].reset();
+        });
+
+        document.getElementById('restart-button-2').addEventListener('click', () => {
+            players[2].reset();
+        });
+
+        // Back button
+        document.getElementById('back-button').addEventListener('click', () => {
+            window.location.href = 'multiplayer.html';
+        });
+
+        // Start the game
+        startGame();
+    </script>
+    <script src="sologame.js"></script> 
+</body>
+</html>

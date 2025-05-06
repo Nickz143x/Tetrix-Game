@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TETR.IX - Solo Game Modes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f0e15;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+        
+        .header {
+            padding: 30px 0 10px 0;
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #ffffff;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        
+        .back-button:hover {
+            background: #ff4c5b;
+            transform: translateY(-2px);
+        }
+        
+        .quote-container {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            padding: 30px;
+            background: rgba(27, 27, 63, 0.7);
+            border-radius: 12px;
+            border-left: 4px solid #6d4ec9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-10px); }
+        }
+        
+        .quote-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .quote-author {
+            font-size: 1rem;
+            color: #a5a3c0;
+            text-align: right;
+            font-style: italic;
+        }
+        
+        .game-modes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 40px 20px;
+            max-width: 600px;
+            margin: 0 0 0 auto;
+            width: calc(100% - 40px);
+            z-index: 1;
+        }
+        
+        .game-mode {
+            background-color: #1b1b3f;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 4px solid;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .game-mode:hover {
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-mode.classic { border-left-color: #6d4ec9; }
+        .game-mode.blitz { border-left-color: #4ec96d; }
+        .game-mode.lines { border-left-color: #c96d4e; }
+        .game-mode.zen { border-left-color: #4e6dc9; }
+
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fffafa;
+        }
+        
+        .mode-description {
+            font-size: 1rem;
+            color: #a5a3c0;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .mode-highlight {
+            display: inline-block;
+            background-color: rgba(124, 99, 148, 0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #d1d1ff;
+        }
+        
+        .start-button {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 16px;
+            background: #2a2842;
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+        
+        .game-mode:hover .start-button {
+            opacity: 1;
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            color: #041304;
+        }
+        
+        @media (max-width: 1024px) {
+            .quote-container {
+                position: static;
+                transform: none;
+                width: auto;
+                margin: 20px;
+                animation: none;
+            }
+            
+            .game-modes-container {
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                font-size: 2rem;
+                padding-top: 60px;
+            }
+            
+            .quote-container {
+                display: none;
+            }
+            
+            .game-modes-container {
+                padding: 20px;
+            }
+            
+            .start-button {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                opacity: 1;
+                width: 100%;
+                margin-top: 10px;
+                background: linear-gradient(90deg, #00c9ff, #92fe9d) !important;
+                color: #0f0e15 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="back-button" onclick="navigateTo('dashboard.html')">← Back</button>
+    <div class="header">CHOOSE GAMEMODES</div>
+    
+    <div class="main-content">
+        <!-- Inspirational Quote -->
+        <div class="quote-container">
+            <div class="quote-text">"Push your limits, climb the leaderboard, and become the ultimate Tetris champion!"</div>
+            <div class="quote-author">- TETR.IX Team</div>
+        </div>
+        
+        <!-- Game Modes -->
+        <div class="game-modes-container">
+            <!-- Classic Mode -->
+            <div class="game-mode classic" onclick="startGame('classic')">
+                <div class="mode-title">CLASSIC MODE</div>
+                <div class="mode-description">
+                    The original Tetris experience. Stack, clear lines, and survive as long as you can!
+                </div>
+                <div class="mode-highlight">Inspired by NES Tetris</div>
+                <button class="start-button">PLAY</button>
+            </div>
+            
+            <!-- Blitz Mode -->
+            <div class="game-mode blitz" onclick="startGame('blitz')">
+                <div class="mode-title">BLITZ MODE</div>
+                <div class="mode-description">
+                    2 minutes to score as high as possible! Fast-paced, high intensity fun.
+                </div>
+                <div class="mode-highlight">2 Minute Sprint</div>
+                <button class="start-button">PLAY</button>
+            </div>
+            
+            <!-- 40 Lines Mode -->
+            <div class="game-mode lines" onclick="startGame('40lines')">
+                <div class="mode-title">40 LINES</div>
+                <div class="mode-description">
+                    Clear 40 lines as fast as possible. A pure speedrunning challenge!
+                </div>
+                <div class="mode-highlight">Speed Test</div>
+                <button class="start-button">PLAY</button>
+            </div>
+            
+            <!-- Zen Mode -->
+            <div class="game-mode zen" onclick="startGame('zen')">
+                <div class="mode-title">ZEN MODE</div>
+                <div class="mode-description">
+                    Endless gameplay with no time limits. Perfect for relaxing and practicing!
+                </div>
+                <div class="mode-highlight">Endless Practice</div>
+                <button class="start-button">PLAY</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startGame(mode) {
+            playClickSound();
+            const gameFiles = {
+                'classic': 'classic.html',
+                'blitz': 'blitz.html',
+                '40lines': '40lines.html',
+                'zen': 'zen.html'
+            };
+            navigateTo(gameFiles[mode]);
+        }
+
+        function navigateTo(page) {
+            const paths = [
+                page,
+                `../${page}`,
+                `/${page}`,
+                `../../${page}`,
+                `/Game/${page.replace('Game/','')}`
+            ];
+            
+            let attempts = 0;
+            function tryRedirect() {
+                if (attempts >= paths.length) {
+                    alert(`Game page not found. Tried:\n${paths.join('\n')}`);
+                    return;
+                }
+                
+                fetch(paths[attempts])
+                    .then(() => window.location.href = paths[attempts])
+                    .catch(() => {
+                        attempts++;
+                        tryRedirect();
+                    });
+            }
+            tryRedirect();
+        }
+
+        function playClickSound() {
+            const clickSound = document.getElementById('click-sound');
+            if (clickSound) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
+        }
+
+        // Add hover sound
+        const gameModes = document.querySelectorAll('.game-mode');
+        gameModes.forEach(mode => {
+            mode.addEventListener('mouseenter', () => {
+                const hoverSound = document.getElementById('hover-sound');
+                if (hoverSound) {
+                    hoverSound.currentTime = 0;
+                    hoverSound.play();
+                }
+            });
+        });
+    </script>
+
+    <!-- Audio elements -->
+    <audio id="click-sound" src="sounds/click.mp3" preload="auto"></audio>
+    <audio id="hover-sound" src="sounds/hover.mp3" preload="auto"></audio>
+    <script src="sologame.js"></script> 
+    <script src="rotateblocks.js"></script> 
+</body>
+</html>

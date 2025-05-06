@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TETR.IX Dashboard</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: #0f0e15;
+        color: white;
+        overflow-x: hidden;
+    }
+    header {
+        background: linear-gradient(135deg, #2a0845 0%, #1a1a2e 100%);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #2d2b42;
+        position: relative;
+        z-index: 10;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 1px;
+    }
+    .user-info {
+        font-size: 14px;
+        color: #b8b8d1;
+    }
+    .content-container {
+        display: flex;
+        min-height: calc(100vh - 70px);
+        position: relative;
+    }
+    .menu {
+        width: 350px;
+        padding: 30px 0;
+        background-color: #161325;
+        border-right: 1px solid #2d2b42;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 5;
+    }
+    .menu-option {
+        width: calc(100% - 40px);
+        padding: 22px 25px;
+        margin: 10px 20px;
+        font-size: 22px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+        color: #ffffff;
+        background: #1a182a;
+        border: 2px solid transparent;
+        border-radius: 12px;
+        box-shadow: 0 0 0px rgba(0,0,0,0);
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .menu-option:nth-child(1) {
+        border-color: #4ec9b0;
+    }
+    .menu-option:nth-child(2) {
+        border-color: #c94ec9;
+    }
+    .menu-option:nth-child(3) {
+        border-color: #4e8ac9;
+    }
+    .menu-option:nth-child(4) {
+        border-color: #c9b04e;
+    }
+    .menu-option:nth-child(5) {
+        border-color: #c94e4e;
+    }
+    .menu-option:hover {
+        background: #24213b;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        border-color: #ffffff !important;
+    }
+    .menu-option.active {
+        background: linear-gradient(145deg, #1f1c3b, #2b2752);
+        box-shadow: inset 0 0 10px #6d4ec9aa;
+        border-color: #ffffff !important;
+    }
+    .menu-option-abbr {
+        font-size: 18px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.7);
+        background: rgba(0,0,0,0.2);
+        padding: 6px 12px;
+        border-radius: 6px;
+        margin-left: 15px;
+    }
+    .main-content {
+        flex: 1;
+        padding: 30px;
+        position: relative;
+        background-color: #1a182a;
+        z-index: 1;
+        overflow-y: auto;
+    }
+    .logout-container {
+        padding: 20px;
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .logout-button {
+        padding: 14px 32px;
+        font-size: 18px;
+        background: #e63946;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+    }
+    .logout-button:hover {
+        background: #ff4c5b;
+        transform: translateY(-3px);
+    }
+    .logo {
+        width: 70px;
+        height: 70px;
+        background-color: #2d2b42;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        color: #6d4ec9;
+    }
+    .subtitle {
+        font-size: 15px;
+        color: #a5a3c0;
+        margin-top: 8px;
+        text-align: left;
+        font-weight: 400;
+    }
+    .home-header {
+        padding: 0 20px 25px 20px;
+        border-bottom: 1px solid #2d2b42;
+        margin-bottom: 25px;
+    }
+    .home-header h1 {
+        font-size: 28px;
+        margin: 0;
+        color: #ffffff;
+        font-weight: 700;
+    }
+    .quote-container {
+        position: fixed;
+        right: 30px;
+        bottom: 30px;
+        width: 280px;
+        padding: 25px;
+        background: rgba(27, 27, 63, 0.85);
+        border-radius: 12px;
+        border-right: 6px solid #6d4ec9;
+        box-shadow: 0 4px 30px rgba(109, 78, 201, 0.4);
+        backdrop-filter: blur(5px);
+        z-index: 100;
+        text-align: right;
+    }
+    .quote-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 15px;
+        line-height: 1.3;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .quote-author {
+        font-size: 1.1rem;
+        color: #d1d1ff;
+        font-style: italic;
+    }
+
+    /* Leaderboard Styles */
+    .leaderboards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+    .leaderboard {
+        background: #1e1c3a;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        border: 1px solid #2d2b42;
+        position: relative;
+        z-index: 2;
+    }
+    .leaderboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #2d2b42;
+    }
+    .leaderboard-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+    .play-button {
+        padding: 8px 16px;
+        background: #6d4ec9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        white-space: nowrap;
+        margin-left: 10px;
+    }
+    .play-button:hover {
+        background: #7d5ed9;
+        transform: translateY(-2px);
+    }
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .leaderboard-table th {
+        text-align: left;
+        padding: 10px 5px;
+        color: #a5a3c0;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .leaderboard-table td {
+        padding: 12px 5px;
+        border-bottom: 1px solid #2d2b42;
+    }
+    .leaderboard-table tr:last-child td {
+        border-bottom: none;
+    }
+    .player-rank {
+        font-weight: 700;
+        color: #6d4ec9;
+        width: 30px;
+    }
+    .player-name {
+        font-weight: 500;
+    }
+    .player-score {
+        text-align: right;
+        font-weight: 600;
+    }
+    .current-user {
+        background: rgba(109, 78, 201, 0.1);
+        border-left: 3px solid #6d4ec9;
+    }
+    .no-data {
+        text-align: center;
+        padding: 30px;
+        color: #a5a3c0;
+        font-style: italic;
+    }
+    .leaderboard-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    .refresh-button {
+        background: #2d2b42;
+        color: #a5a3c0;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .refresh-button:hover {
+        color: #ffffff;
+        background: #3d3b52;
+    }
+    .loading {
+        color: #a5a3c0;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Animation container */
+    .falling-blocks {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .falling-block {
+        position: absolute;
+        top: -50px;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(7, 154, 173, 0.6);
+        border-radius: 5px;
+        animation: fall linear infinite;
+        z-index: 1;
+    }
+    @keyframes fall {
+        0% { top: -50px; }
+        100% { top: 100vh; }
+    }
+
+    @media (max-width: 1200px) {
+        .quote-container {
+            position: static;
+            width: auto;
+            margin: 40px 20px 20px auto;
+            max-width: 500px;
+            text-align: center;
+            border-right: none;
+            border-top: 6px solid #6d4ec9;
+        }
+        .quote-text { font-size: 1.6rem; }
+    }
+    @media (max-width: 768px) {
+        .quote-container { display: none; }
+        .menu { width: 100%; }
+        .menu-option { font-size: 20px; padding: 18px 20px; }
+        .menu-option-abbr { font-size: 16px; }
+        .leaderboards-container {
+            grid-template-columns: 1fr;
+        }
+        .content-container {
+            flex-direction: column;
+        }
+        .menu {
+            width: 100%;
+            padding: 15px 0;
+        }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .quote-change { animation: fadeIn 1s ease-out; }
+</style>
+</head>
+
+<body>
+
+<!-- Falling Blocks Animation -->
+<div class="falling-blocks" id="fallingBlocks"></div>
+
+<header>
+    <h1>TETR.IX</h1>
+    <div class="user-info" id="user-display">Welcome, Guest</div>
+</header>
+
+<div class="content-container">
+    <div class="menu">
+        <div class="home-header">
+            <h1>HOME</h1>
+        </div>
+
+        <div class="menu-options">
+            <div class="menu-option" onclick="navigateTo('multiplayer.html')">
+                <div>
+                    MULTIPLAYER
+                    <div class="subtitle">PLAY ONLINE WITH FRIENDS AND FOES</div>
+                </div>
+                <span class="menu-option-abbr">MP</span>
+            </div>
+
+            <div class="menu-option" onclick="navigateTo('sologame.html')">
+                <div>
+                    SOLO
+                    <div class="subtitle">CHALLENGE YOURSELF AND TOP THE LEADERBOARDS</div>
+                </div>
+                <span class="menu-option-abbr">SL</span>
+            </div>
+
+            <div class="menu-option" onclick="navigateTo('Tetrix_Channel.html')">
+                <div>
+                    TETR.IX CHANNEL
+                    <div class="subtitle">LEADERBOARDS, TOURNAMENTS, REPLAYS AND MORE</div>
+                </div>
+                <span class="menu-option-abbr">TCH</span>
+            </div>
+
+            <div class="menu-option" onclick="navigateTo('config.html')">
+                <div>
+                    CONFIG
+                    <div class="subtitle">TWEAK YOUR TETR.IX EXPERIENCE</div>
+                </div>
+                <span class="menu-option-abbr">CFG</span>
+            </div>
+
+            <div class="menu-option" onclick="navigateTo('about.html')">
+                <div>
+                    ABOUT
+                    <div class="subtitle">ALL ABOUT TETR.IX</div>
+                </div>
+                <span class="menu-option-abbr">ABT</span>
+            </div>
+        </div>
+
+        <div class="logout-container">
+            <button class="logout-button" onclick="logout()">Logout</button>
+            <div class="logo">T.IX</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="leaderboard-controls">
+            <h2 style="margin: 0; color: #6d4ec9;">LEADERBOARDS</h2>
+            <button class="refresh-button" onclick="loadLeaderboards()">
+                Refresh ↻
+            </button>
+        </div>
+        <p style="color: #a5a3c0; margin-bottom: 30px;">Compete against the best players in different game modes</p>
+        
+        <div class="leaderboards-container">
+            <!-- Classic Mode Leaderboard -->
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <h3 class="leaderboard-title">Classic Mode</h3>
+                    <button class="play-button" onclick="navigateTo('classic.html')">Play</button>
+                </div>
+                <div id="classic-leaderboard">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classic-leaderboard-body">
+                            <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Blitz Mode Leaderboard -->
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <h3 class="leaderboard-title">Blitz Mode</h3>
+                    <button class="play-button" onclick="navigateTo('blitz.html')">Play</button>
+                </div>
+                <div id="blitz-leaderboard">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blitz-leaderboard-body">
+                            <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 40 Lines Mode Leaderboard -->
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <h3 class="leaderboard-title">40 Lines Mode</h3>
+                    <button class="play-button" onclick="navigateTo('40lines.html')">Play</button>
+                </div>
+                <div id="40lines-leaderboard">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="40lines-leaderboard-body">
+                            <tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quote-container" id="quoteDisplay">
+        <div class="quote-text">"PUSH YOUR LIMITS!"</div>
+        <div class="quote-author">- TETR.IX TEAM</div>
+    </div>
+</div>
+
+<audio id="click-sound" src="click.mp3" preload="auto"></audio>
+<audio id="hover-sound" src="hover.mp3" preload="auto"></audio>
+
+<script>
+    // Initialize localStorage keys if they don't exist
+    function initializeStorage() {
+        if (!localStorage.getItem('tetrixClassicScores')) {
+            localStorage.setItem('tetrixClassicScores', JSON.stringify([]));
+        }
+        if (!localStorage.getItem('tetrixBlitzScores')) {
+            localStorage.setItem('tetrixBlitzScores', JSON.stringify([]));
+        }
+        if (!localStorage.getItem('tetrix40LinesScores')) {
+            localStorage.setItem('tetrix40LinesScores', JSON.stringify([]));
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeStorage();
+        
+        // Get the current user from localStorage
+        const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+        
+        if (currentUser) {
+            // Display the username or email
+            let displayName = 'Guest';
+            if (currentUser.username) {
+                displayName = currentUser.username;
+            } else if (currentUser.email && currentUser.email !== 'guest') {
+                displayName = currentUser.email.split('@')[0];
+            }
+            
+            // Update welcome message
+            if (currentUser.guest) {
+                document.getElementById('user-display').textContent = `Playing as Guest`;
+            } else {
+                document.getElementById('user-display').textContent = `Welcome, ${displayName}`;
+            }
+        }
+        
+        displayRandomQuote();
+        loadLeaderboards();
+        createFallingBlocks();
+    });
+
+    function loadLeaderboards() {
+        // Get current user info
+        const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser')) || {};
+        const currentUsername = currentUser.username || (currentUser.guest ? 'Guest' : 'Player');
+
+        // Deduplicate and get best Classic scores (high scores)
+        const classicScoresRaw = JSON.parse(localStorage.getItem('tetrixClassicScores') || '[]');
+        const classicScoresMap = new Map();
+        classicScoresRaw.forEach(player => {
+            if (!classicScoresMap.has(player.name) || classicScoresMap.get(player.name).score < player.score) {
+                classicScoresMap.set(player.name, player);
+            }
+        });
+        const classicScores = Array.from(classicScoresMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10);
+
+        const classicBody = document.getElementById('classic-leaderboard-body');
+        classicBody.innerHTML = '';
+
+        if (classicScores.length === 0) {
+            classicBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            classicScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                row.innerHTML = `
+                    <td class="player-rank">${index + 1}</td>
+                    <td class="player-name">${player.name}</td>
+                    <td class="player-score">${player.score.toLocaleString()}</td>
+                `;
+                classicBody.appendChild(row);
+            });
+        }
+
+        // Deduplicate and get best Blitz scores (high scores)
+        const blitzScoresRaw = JSON.parse(localStorage.getItem('tetrixBlitzScores') || '[]');
+        const blitzScoresMap = new Map();
+        blitzScoresRaw.forEach(player => {
+            if (!blitzScoresMap.has(player.name) || blitzScoresMap.get(player.name).score < player.score) {
+                blitzScoresMap.set(player.name, player);
+            }
+        });
+        const blitzScores = Array.from(blitzScoresMap.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10);
+
+        const blitzBody = document.getElementById('blitz-leaderboard-body');
+        blitzBody.innerHTML = '';
+
+        if (blitzScores.length === 0) {
+            blitzBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            blitzScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                row.innerHTML = `
+                    <td class="player-rank">${index + 1}</td>
+                    <td class="player-name">${player.name}</td>
+                    <td class="player-score">${player.score.toLocaleString()}</td>
+                `;
+                blitzBody.appendChild(row);
+            });
+        }
+
+        // Deduplicate and get best 40 Lines scores (low times)
+        const fortyLinesScoresRaw = JSON.parse(localStorage.getItem('tetrix40LinesScores') || '[]');
+        const fortyLinesScoresMap = new Map();
+        fortyLinesScoresRaw.forEach(player => {
+            if (!fortyLinesScoresMap.has(player.name) || fortyLinesScoresMap.get(player.name).time > player.time) {
+                fortyLinesScoresMap.set(player.name, player);
+            }
+        });
+        const fortyLinesScores = Array.from(fortyLinesScoresMap.values())
+            .sort((a, b) => a.time - b.time)
+            .slice(0, 10);
+
+        const fortyLinesBody = document.getElementById('40lines-leaderboard-body');
+        fortyLinesBody.innerHTML = '';
+
+        if (fortyLinesScores.length === 0) {
+            fortyLinesBody.innerHTML = '<tr><td colspan="3" class="no-data">No scores yet</td></tr>';
+        } else {
+            fortyLinesScores.forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (player.name === currentUsername) row.classList.add('current-user');
+
+                // Format time as MM:SS.ms
+                const minutes = Math.floor(player.time / 60000);
+                const seconds = Math.floor((player.time % 60000) / 1000);
+                const milliseconds = Math.floor(player.time % 1000);
+                const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0').slice(0, 2)}`;
+
+                row.innerHTML = `
+                    <td class="player-rank">${index + 1}</td>
+                    <td class="player-name">${player.name}</td>
+                    <td class="player-score">${formattedTime}</td>
+                `;
+                fortyLinesBody.appendChild(row);
+            });
+        }
+    }
+
+    function createFallingBlocks() {
+        function createBlock() {
+            const block = document.createElement('div');
+            block.classList.add('falling-block');
+            document.getElementById('fallingBlocks').appendChild(block);
+            
+            const randomX = Math.random() * 100;
+            block.style.left = `${randomX}%`;
+            block.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            
+            setTimeout(() => {
+                block.remove();
+            }, 5000);
+        }
+
+        // Create initial blocks
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createBlock, i * 300);
+        }
+
+        // Continue creating blocks at intervals
+        setInterval(createBlock, 500);
+    }
+
+    const tetrisQuotes = [
+        {text: "BLOCKS FALL, CHAMPIONS RISE!", author: "TETR.IX MASTER"},
+        {text: "YOUR NEXT HIGH SCORE STARTS NOW!", author: "MOTIVATOR"},
+        {text: "SPEED IS KEY, PRECISION IS POWER!", author: "GRAND CHAMPION"},
+        {text: "CLEAR LINES, CLAIM GLORY!", author: "TETR.IX TEAM"},
+        {text: "EVERY MOVE COUNTS - PLAN WISELY!", author: "STRATEGIST"},
+        {text: "THE BOARD IS YOUR BATTLEFIELD!", author: "WARRIOR"},
+        {text: "PERFECTION COMES ONE BLOCK AT A TIME", author: "SENSEI"}
+    ];
+
+    function displayRandomQuote() {
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        const randomIndex = Math.floor(Math.random() * tetrisQuotes.length);
+        const quote = tetrisQuotes[randomIndex];
+
+        quoteDisplay.classList.add('quote-change');
+        document.querySelector('#quoteDisplay .quote-text').textContent = `"${quote.text}"`;
+        document.querySelector('#quoteDisplay .quote-author').textContent = `- ${quote.author}`;
+        setTimeout(() => quoteDisplay.classList.remove('quote-change'), 1000);
+
+        setInterval(() => {
+            const newIndex = Math.floor(Math.random() * tetrisQuotes.length);
+            const newQuote = tetrisQuotes[newIndex];
+
+            quoteDisplay.classList.add('quote-change');
+            setTimeout(() => {
+                document.querySelector('#quoteDisplay .quote-text').textContent = `"${newQuote.text}"`;
+                document.querySelector('#quoteDisplay .quote-author').textContent = `- ${newQuote.author}`;
+                setTimeout(() => quoteDisplay.classList.remove('quote-change'), 1000);
+            }, 500);
+        }, 30000);
+    }
+
+</script>
+<script src="common.js"></script>
+<script>
+    function logout() {
+        playClickSound();
+        setTimeout(() => {
+            localStorage.removeItem('tetrixCurrentUser');
+            window.location.href = "login.html";
+        }, 300);
+    }
+
+    const menuOptions = document.querySelectorAll('.menu-option');
+    menuOptions.forEach(option => {
+        option.addEventListener('mouseenter', playHoverSound);
+    });
+</script>
+<script src="sologame.js"></script> 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const currentUser = JSON.parse(localStorage.getItem('tetrixCurrentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+});
+</script>
+</body>
+</html>

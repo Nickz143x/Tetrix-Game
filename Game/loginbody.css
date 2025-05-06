@@ -1,0 +1,9 @@
+body {
+    background: linear-gradient(to right, #2c024d, #5a2c6d); /* Lighter shade on the right */
+    font-family: 'Courier New', Courier, monospace;
+    color: #ffffff;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
